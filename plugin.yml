@@ -1,0 +1,12 @@
+name: ZeroG
+main: com.comze_instancelabs.zerog.Main
+version: 1.0.0
+author: InstanceLabs
+softdepend: [Vault, MinigamesAPI]
+depend: [MinigamesAPI]
+loadbefore: [MinigamesAPI]
+commands:
+   zg:
+      description: Main command
+      usage: /zg [action]
+      aliases: [zerog]
