@@ -11,7 +11,7 @@ import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
 
 public class MEBat extends EntityBat {
 
-	double r = Math.random() + 0.01D;
+	private double r = (Math.random() + 0.5D);
 
 	private double mY = 0.03D;
 
@@ -42,6 +42,10 @@ public class MEBat extends EntityBat {
 
 	public void setmY(double mY) {
 		this.mY = mY;
+	}
+
+	public double getR() {
+		return r;
 	}
 
 }

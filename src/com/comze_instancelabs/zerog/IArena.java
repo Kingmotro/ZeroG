@@ -38,7 +38,7 @@ public class IArena extends Arena {
 
 	boolean cteam = true;
 
-	// TODO REVERT
+	// TODO Revert back to 30
 	int c = 10;
 	boolean cgravity = false;
 
@@ -177,7 +177,6 @@ public class IArena extends Arena {
 				timertask.cancel();
 			}
 
-			// TODO
 			for (MEBat t_ : bats) {
 				// t_.setmY(-0.1D);
 				t_.motY = -0.1D;
@@ -185,12 +184,9 @@ public class IArena extends Arena {
 
 			Bukkit.getScheduler().runTaskLater(m, new Runnable() {
 				public void run() {
-					for (Location l : oldblocks.keySet()) {
-						l.getWorld().getBlockAt(l).setType(oldblocks.get(l));
-					}
 					clearBlocks();
 				}
-			}, 30L);
+			}, 45L);
 		}
 	}
 
@@ -198,7 +194,6 @@ public class IArena extends Arena {
 
 	public ArrayList<Location> getSurfaceBlocks(int percentage) {
 		ArrayList<Location> ret = new ArrayList<Location>();
-		// TODO
 		// get low/high border, calculate 10% of x*z surface and get highest block with world.getHighestY
 		// put into arraylist of blocks
 		// iterate through list and remove each block and spawn a fallingblock
@@ -241,14 +236,14 @@ public class IArena extends Arena {
 					b.setType(Material.AIR);
 				}
 			}
-		}, 10L);
+		}, 7L);
 		timertask = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
 			public void run() {
 				for (MEBat t : bats) {
 					// t.getBukkitEntity().setVelocity(new Vector(0D, 1.5D, 0D));
 					t.motY = 0.04D;
 					t.setmY(0.04D);
-					((Bat) t.getBukkitEntity()).setVelocity(new Vector(0D, 0.04D, 0D));
+					((Bat) t.getBukkitEntity()).setVelocity(new Vector(0D, 0.04D * t.getR(), 0D));
 					// t.setPosition(t.locX, t.locY + 0.05D, t.locZ);
 					// t.setmY(0.2D * Math.random());
 				}
@@ -266,7 +261,9 @@ public class IArena extends Arena {
 	}
 
 	public void clearBlocks() {
-		// TODO clear all fallingblock entities after stop
+		for (Location l : oldblocks.keySet()) {
+			l.getWorld().getBlockAt(l).setType(oldblocks.get(l));
+		}
 		for (MEBat t : bats) {
 			Bat b = (Bat) t.getBukkitEntity();
 			if (b.getPassenger() != null) {
