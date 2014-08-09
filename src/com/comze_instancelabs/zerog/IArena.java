@@ -1,11 +1,13 @@
 package com.comze_instancelabs.zerog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Bat;
@@ -180,6 +182,15 @@ public class IArena extends Arena {
 				// t_.setmY(-0.1D);
 				t_.motY = -0.1D;
 			}
+
+			Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+				public void run() {
+					for (Location l : oldblocks.keySet()) {
+						l.getWorld().getBlockAt(l).setType(oldblocks.get(l));
+					}
+					clearBlocks();
+				}
+			}, 30L);
 		}
 	}
 
@@ -213,22 +224,31 @@ public class IArena extends Arena {
 	ArrayList<MEFallingBlock1_7_9> fallingblocks = new ArrayList<MEFallingBlock1_7_9>();
 	ArrayList<MEBat> bats = new ArrayList<MEBat>();
 
-	public void floatUpTimer(ArrayList<Block> blocks) {
+	HashMap<Location, Material> oldblocks = new HashMap<Location, Material>();
+
+	public void floatUpTimer(final ArrayList<Block> blocks) {
 		for (Block b : blocks) {
+			oldblocks.put(b.getLocation(), b.getType());
 			MEBat t = register1_7_9.spawnBlock(m, this.getName(), b);
 			bats.add(t);
 			Bat b_ = (Bat) t.getBukkitEntity();
 			b_.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
 			t.hinit();
-			// b.setType(Material.AIR);
 		}
+		Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+			public void run() {
+				for (Block b : blocks) {
+					b.setType(Material.AIR);
+				}
+			}
+		}, 10L);
 		timertask = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
 			public void run() {
 				for (MEBat t : bats) {
 					// t.getBukkitEntity().setVelocity(new Vector(0D, 1.5D, 0D));
 					t.motY = 0.04D;
 					t.setmY(0.04D);
-					((Bat)t.getBukkitEntity()).setVelocity(new Vector(0D, 0.04D, 0D));
+					((Bat) t.getBukkitEntity()).setVelocity(new Vector(0D, 0.04D, 0D));
 					// t.setPosition(t.locX, t.locY + 0.05D, t.locZ);
 					// t.setmY(0.2D * Math.random());
 				}
@@ -254,6 +274,9 @@ public class IArena extends Arena {
 			}
 			b.remove();
 		}
+		bats.clear();
+		fallingblocks.clear();
+		oldblocks.clear();
 	}
 
 }

@@ -89,7 +89,6 @@ public class register1_7_9 {
 
 	public static MEBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
 		final Object w = ((CraftWorld) b.getWorld()).getHandle();
-		System.out.println(b);
 		final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation());
 		final MEFallingBlock1_7_9 t_ = new MEFallingBlock1_7_9(m, arena, b.getLocation(), (net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle());
 

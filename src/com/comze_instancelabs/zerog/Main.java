@@ -182,7 +182,7 @@ public class Main extends JavaPlugin implements Listener {
 
 				if(a.cgravity){
 					Vector v = p.getVelocity();
-					Vector v2 = v.multiply(new Vector(0.8D, 0.9D, 0.8D));
+					Vector v2 = v.multiply(new Vector(0.85D, 0.9D, 0.85D));
 					//p.setVelocity(p.getVelocity().multiply(0.6D));
 					p.setVelocity(v2);
 				}
