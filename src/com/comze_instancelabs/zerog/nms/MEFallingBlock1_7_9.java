@@ -20,7 +20,7 @@ public class MEFallingBlock1_7_9 extends EntityFallingBlock {
 		super(world);
 		this.m = m;
 		this.arena = arena;
-		setPosition(loc.getX(), loc.getY(), loc.getZ());
+		setPosition(loc.getX(), loc.getY() + 1D, loc.getZ());
 	}
 
 	int X;
@@ -69,9 +69,12 @@ public class MEFallingBlock1_7_9 extends EntityFallingBlock {
 		return (float) (-yaw * 180 / Math.PI - 90);
 	}
 
+	private double mY = 0.2D;
+	
 	@Override
 	public void h() {
-		motY = 0;
+		//motY = getmY();
+		motY = 0D;
 		move(motX, motY, motZ);
 	}
 
@@ -86,6 +89,14 @@ public class MEFallingBlock1_7_9 extends EntityFallingBlock {
 
 	public boolean a(EntityComplexPart entitycomplexpart, DamageSource damagesource, int i) {
 		return false;
+	}
+
+	public double getmY() {
+		return mY;
+	}
+
+	public void setmY(double mY) {
+		this.mY = mY;
 	}
 
 }
