@@ -159,7 +159,7 @@ public class IArena extends Arena {
 				Player p = Bukkit.getPlayer(p_);
 				p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100000, 4));
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 100000, 5));
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 2));
+				//p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 1));
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Zero Gravity Mode " + ChatColor.DARK_GREEN + "Activitated");
 			}
 
@@ -176,7 +176,7 @@ public class IArena extends Arena {
 				Player p = Bukkit.getPlayer(p_);
 				p.removePotionEffect(PotionEffectType.JUMP);
 				p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-				p.removePotionEffect(PotionEffectType.SLOW);
+				//p.removePotionEffect(PotionEffectType.SLOW);
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Gravity restored");
 			}
 

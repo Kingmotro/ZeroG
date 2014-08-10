@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,6 +34,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -53,7 +56,6 @@ import com.comze_instancelabs.zerog.gravitygun.GravityGun;
 import com.comze_instancelabs.zerog.gravitygun.MainListener;
 import com.comze_instancelabs.zerog.nms.register1_7_9;
 import com.shampaggon.crackshot.CSUtility;
-
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -103,7 +105,6 @@ public class Main extends JavaPlugin implements Listener {
 		MinigamesAPI.getAPI().registerArenaListenerLater(this, listener);
 		pli = pinstance;
 
-		// TODO support more versions
 		register1_7_9.registerEntities();
 
 		log = this.getLogger();
@@ -165,7 +166,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(new MainListener(this), this);
 
-		this.getConfig().addDefault("Movement-update-intervall", 5);
+		this.getConfig().addDefault("Movement-update-intervall", 1);
 		this.getConfig().addDefault("Sound", "note_pling");
 		this.getConfig().addDefault("Sound-pitch", 1);
 		this.getConfig().addDefault("Sound-volume", 1);
@@ -188,6 +189,21 @@ public class Main extends JavaPlugin implements Listener {
 						Main.map.get(s).setVelocity(vec);
 					} catch (Exception exc) {
 						Main.map.remove(p.getName());
+					}
+				}
+
+				for (String p_ : pli.global_players.keySet()) {
+					Player p = Bukkit.getPlayer(p_);
+					for (Entity ent : p.getNearbyEntities(2D, 2D, 2D)) {
+						if (ent.getType() == EntityType.FALLING_BLOCK && ent.hasMetadata("1337")) {
+							List<MetadataValue> data = ent.getMetadata("1337");
+							String p__ = data.get(0).asString();
+							if(p_ != p__){
+								Location l = ent.getLocation();
+								l.getWorld().createExplosion(l.getX(), l.getY(), l.getZ(), 1F, false, false);
+								ent.remove();
+							}
+						}
 					}
 				}
 			}
@@ -323,10 +339,13 @@ public class Main extends JavaPlugin implements Listener {
 
 				if (a.cgravity) {
 					Vector v = p.getVelocity();
-					Vector v2 = v.multiply(new Vector(0.87D, 0.93D, 0.87D));
+					Vector v2 = v.multiply(new Vector(0.9D, 0.95D, 0.9D));
 					// p.setVelocity(p.getVelocity().multiply(0.6D));
 					p.setVelocity(v2);
 				}
+
+				// TODO chicken idea
+
 			}
 		}
 	}
