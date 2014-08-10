@@ -1,15 +1,27 @@
 package com.comze_instancelabs.zerog;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
+
+import net.minecraft.server.v1_7_R4.EntityFallingBlock;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,9 +33,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.comze_instancelabs.zerog.nms.register1_7_9;
 import com.comze_instancelabs.minigamesapi.Arena;
 import com.comze_instancelabs.minigamesapi.ArenaSetup;
 import com.comze_instancelabs.minigamesapi.ArenaState;
@@ -35,11 +48,39 @@ import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.minigamesapi.util.Validator;
+import com.comze_instancelabs.zerog.gravitygun.CustomEntityType;
+import com.comze_instancelabs.zerog.gravitygun.GravityGun;
+import com.comze_instancelabs.zerog.gravitygun.MainListener;
+import com.comze_instancelabs.zerog.nms.register1_7_9;
 import com.shampaggon.crackshot.CSUtility;
+
 
 public class Main extends JavaPlugin implements Listener {
 
 	// allow selecting team
+
+	// GRAVITY GUN
+
+	public static int moveid;
+	public static int invisibiltyid;
+
+	public static HashMap<String, Entity> map = new HashMap<>();
+	public static HashMap<EntityFallingBlock, String> thrown = new HashMap<>();
+	public static HashMap<String, ItemStack[]> inventorys = new HashMap<>();
+	public static HashMap<String, CreatureSpawner> spawners = new HashMap<>();
+	public static HashMap<String, Object> tilentities = new HashMap<>();
+
+	public static final UUID ID = UUID.fromString("5f473430-3275-4951-abc9-d39f4be8ce26");
+
+	static File f = new File("plugins/ZeroG/GravityGuns.yml");
+	@SuppressWarnings("static-access")
+	static FileConfiguration con = new YamlConfiguration().loadConfiguration(f);
+
+	public static HashMap<String, GravityGun> reg = new HashMap<>();
+
+	public static Logger log;
+
+	// /GG
 
 	MinigamesAPI api = null;
 	PluginInstance pli = null;
@@ -61,10 +102,107 @@ public class Main extends JavaPlugin implements Listener {
 		pinstance.setArenaListener(listener);
 		MinigamesAPI.getAPI().registerArenaListenerLater(this, listener);
 		pli = pinstance;
-		
-		
+
 		// TODO support more versions
 		register1_7_9.registerEntities();
+
+		log = this.getLogger();
+
+		CustomEntityType.registerEntities();
+
+		if (con.getList("GravityGuns") == null) {
+			reg = new HashMap<>();
+			GravityGun g = new GravityGun("default");
+
+			ArrayList<String> lore = new ArrayList<>();
+			ArrayList<String> blockpickup = new ArrayList<>();
+			ArrayList<String> blockpickupexceptions = new ArrayList<>();
+			ArrayList<String> entitypickup = new ArrayList<>();
+			ArrayList<String> entitypickupexception = new ArrayList<>();
+
+			lore.add("§6Move Blocks and Entitys!");
+			g.setLore(lore);
+			blockpickup.add("all");
+			g.setBlockpickup(blockpickup);
+			blockpickupexceptions.add("bedrock");
+			g.setBlockpickupexeptions(blockpickupexceptions);
+			entitypickup.add("all");
+			g.setEntitypickup(entitypickup);
+
+			entitypickupexception.add("player");
+			entitypickupexception.add("wither");
+			entitypickupexception.add("enderdragon");
+			g.setEntitypickupexeptions(entitypickupexception);
+
+			g.setCanthrow(true);
+			g.setDisplay(new ItemStack(Material.COAL));
+
+			ArrayList<Map<String, Object>> gravl = new ArrayList<>();
+			gravl.add(g.serialize());
+
+			con.set("GravityGuns", gravl);
+
+			try {
+				con.save(f);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			reg.put(g.getName(), g);
+
+		} else {
+			@SuppressWarnings("unchecked")
+			ArrayList<Map<String, Object>> temp = (ArrayList<Map<String, Object>>) con.getList("GravityGuns");
+
+			for (Map<String, Object> map : temp) {
+
+				GravityGun g = GravityGun.deserialize(map);
+				g.setName(g.getName().replace(";", ":"));
+
+				reg.put(GravityGun.deserialize(map).getName().replace(";", ":"), GravityGun.deserialize(map));
+			}
+		}
+
+		Bukkit.getPluginManager().registerEvents(new MainListener(this), this);
+
+		this.getConfig().addDefault("Movement-update-intervall", 5);
+		this.getConfig().addDefault("Sound", "note_pling");
+		this.getConfig().addDefault("Sound-pitch", 1);
+		this.getConfig().addDefault("Sound-volume", 1);
+		this.getConfig().addDefault("Auto-ignite-tnt", true);
+		this.getConfig().addDefault("Tnt-fuseticks", 50);
+		this.getConfig().addDefault("Vector", 0.2);
+		this.getConfig().addDefault("Distance", 5);
+
+		this.getConfig().options().copyDefaults(true);
+		this.saveConfig();
+
+		final JavaPlugin plugin = this;
+		moveid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			@Override
+			public void run() {
+				for (String s : Main.map.keySet()) {
+					Player p = Bukkit.getPlayerExact(s);
+					Vector vec = Main.getTargetLocation(p, plugin.getConfig().getInt("Distance")).toVector().subtract(Main.map.get(s).getLocation().toVector());
+					try {
+						Main.map.get(s).setVelocity(vec);
+					} catch (Exception exc) {
+						Main.map.remove(p.getName());
+					}
+				}
+			}
+		}, this.getConfig().getLong("Movement-update-intervall"), 1);
+		invisibiltyid = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			@Override
+			public void run() {
+				for (Entity ent : Main.map.values()) {
+					if (ent instanceof LivingEntity) {
+						PotionEffect pot = new PotionEffect(PotionEffectType.INVISIBILITY, 6000, 1);
+						((LivingEntity) ent).addPotionEffect(pot);
+					}
+				}
+			}
+		}, 5000, 1);
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -141,7 +279,10 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 
-		// TODO give gravity gun
+		GravityGun g = Main.reg.get("default");
+		if (g != null) {
+			p.getInventory().addItem(g.getItemStack());
+		}
 
 		p.updateInventory();
 	}
@@ -180,10 +321,10 @@ public class Main extends JavaPlugin implements Listener {
 					return;
 				}
 
-				if(a.cgravity){
+				if (a.cgravity) {
 					Vector v = p.getVelocity();
 					Vector v2 = v.multiply(new Vector(0.87D, 0.93D, 0.87D));
-					//p.setVelocity(p.getVelocity().multiply(0.6D));
+					// p.setVelocity(p.getVelocity().multiply(0.6D));
 					p.setVelocity(v2);
 				}
 			}
@@ -241,6 +382,45 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
+	}
+
+	// GRAVITY GUN
+
+	@Override
+	public void onDisable() {
+
+		this.getServer().getScheduler().cancelTask(moveid);
+		this.getServer().getScheduler().cancelTask(invisibiltyid);
+
+		this.getServer().resetRecipes();
+
+		map.clear();
+		reg.clear();
+
+	}
+
+	public static Location getTargetLocation(Player p, int maxDistance) {
+
+		Location loc = p.getEyeLocation();
+
+		Vector v = loc.getDirection().normalize();
+
+		for (int i = 1; i <= maxDistance; i++) {
+			loc.add(v);
+			if (loc.getBlock().getType() != Material.AIR)
+				return loc;
+		}
+
+		return loc;
+
+	}
+
+	public static ArrayList<String> toUpperCase(ArrayList<String> strings) {
+		for (int i = 0, l = strings.size(); i < l; ++i) {
+			strings.set(i, strings.get(i).toUpperCase());
+		}
+		return strings;
+
 	}
 
 }
