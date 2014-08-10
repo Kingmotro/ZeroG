@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_7_R4.EntityFallingBlock;
+import net.minecraft.server.v1_7_R3.EntityFallingBlock;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
