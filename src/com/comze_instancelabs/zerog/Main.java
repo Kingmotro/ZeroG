@@ -21,6 +21,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -91,6 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 	ICommandHandler cmdhandler = new ICommandHandler();
 
 	public static HashMap<String, String> pteam = new HashMap<String, String>();
+	public static HashMap<String, Chicken> pchick = new HashMap<String, Chicken>(); // sexy chick
 
 	public void onEnable() {
 		m = this;
@@ -198,7 +200,7 @@ public class Main extends JavaPlugin implements Listener {
 						if (ent.getType() == EntityType.FALLING_BLOCK && ent.hasMetadata("1337")) {
 							List<MetadataValue> data = ent.getMetadata("1337");
 							String p__ = data.get(0).asString();
-							if(p_ != p__){
+							if (p_ != p__) {
 								Location l = ent.getLocation();
 								l.getWorld().createExplosion(l.getX(), l.getY(), l.getZ(), 1F, false, false);
 								ent.remove();
@@ -338,10 +340,28 @@ public class Main extends JavaPlugin implements Listener {
 				}
 
 				if (a.cgravity) {
-					Vector v = p.getVelocity();
-					Vector v2 = v.multiply(new Vector(0.9D, 0.95D, 0.9D));
+					// Vector v = p.getVelocity();
+					// Vector v2 = v.multiply(new Vector(0.9D, 0.95D, 0.9D));
 					// p.setVelocity(p.getVelocity().multiply(0.6D));
-					p.setVelocity(v2);
+					// p.setVelocity(v2);
+					Location l = p.getLocation();
+					if (l.clone().add(0D, -4D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -3D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -2D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -1D, 0D).getBlock().getType() == Material.AIR) {
+						if (!pchick.containsKey(p.getName())) {
+							Chicken chick = (Chicken) l.getWorld().spawn(l, Chicken.class);
+							chick.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
+							chick.setVelocity(p.getVelocity().multiply(new Vector(3D, 0D, 3D)));
+							chick.setPassenger(p);
+							pchick.put(p.getName(), chick);
+						}
+					}
+				}
+
+				if (pchick.containsKey(p.getName())) {
+					Chicken chick = pchick.get(p.getName());
+					if (chick.getLocation().clone().add(0D, -1D, 0D).getBlock().getType() != Material.AIR) {
+						chick.remove();
+						pchick.remove(p.getName());
+					}
 				}
 
 				// TODO chicken idea

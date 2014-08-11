@@ -193,7 +193,7 @@ public class IArena extends Arena {
 				public void run() {
 					clearBlocks();
 				}
-			}, 45L);
+			}, 50L);
 		}
 	}
 
@@ -281,6 +281,7 @@ public class IArena extends Arena {
 		bats.clear();
 		fallingblocks.clear();
 		oldblocks.clear();
+		ccount = 0;
 	}
 
 }
