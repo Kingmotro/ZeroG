@@ -89,23 +89,24 @@ public class register1_7_9 {
 
 	public static MEBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
 		final Object w = ((CraftWorld) b.getWorld()).getHandle();
-		final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation());
+		//final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation());
 		final MEFallingBlock1_7_9 t_ = new MEFallingBlock1_7_9(m, arena, b.getLocation(), (net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle());
 
 		Bukkit.getScheduler().runTask(m, new Runnable() {
 			public void run() {
 				t_.id = Block.e(b.getTypeId());
 				t_.data = b.getData();
-				Bat bb = (Bat) b_.getBukkitEntity();
+				//Bat bb = (Bat) b_.getBukkitEntity();
 				FallingBlock bf = (FallingBlock) t_.getBukkitEntity();
-				bb.setPassenger(bf);
+				//bb.setPassenger(bf);
 
-				((net.minecraft.server.v1_7_R3.World) w).addEntity(b_, CreatureSpawnEvent.SpawnReason.CUSTOM);
+				//((net.minecraft.server.v1_7_R3.World) w).addEntity(b_, CreatureSpawnEvent.SpawnReason.CUSTOM);
 				((net.minecraft.server.v1_7_R3.World) w).addEntity(t_, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
 			}
 		});
 
-		return b_;
+		//return b_;
+		return null;
 	}
 }

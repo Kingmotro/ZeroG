@@ -24,8 +24,8 @@ import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.util.Cuboid;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.zerog.nms.MEBat;
-import com.comze_instancelabs.zerog.nms.MEFallingBlock1_7_9;
-import com.comze_instancelabs.zerog.nms.register1_7_9;
+import com.comze_instancelabs.zerog.nms.MEFallingBlock1_7_10;
+import com.comze_instancelabs.zerog.nms.register1_7_10;
 
 public class IArena extends Arena {
 
@@ -223,7 +223,7 @@ public class IArena extends Arena {
 
 	int ccount = 0;
 	BukkitTask timertask = null;
-	ArrayList<MEFallingBlock1_7_9> fallingblocks = new ArrayList<MEFallingBlock1_7_9>();
+	ArrayList<MEFallingBlock1_7_10> fallingblocks = new ArrayList<MEFallingBlock1_7_10>();
 	ArrayList<MEBat> bats = new ArrayList<MEBat>();
 
 	HashMap<Location, Material> oldblocks = new HashMap<Location, Material>();
@@ -231,7 +231,7 @@ public class IArena extends Arena {
 	public void floatUpTimer(final ArrayList<Block> blocks) {
 		for (Block b : blocks) {
 			oldblocks.put(b.getLocation(), b.getType());
-			MEBat t = register1_7_9.spawnBlock(m, this.getName(), b);
+			MEBat t = register1_7_10.spawnBlock(m, this.getName(), b);
 			bats.add(t);
 			Bat b_ = (Bat) t.getBukkitEntity();
 			b_.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));

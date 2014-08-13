@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_7_R3.EntityFallingBlock;
+import net.minecraft.server.v1_7_R4.EntityFallingBlock;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +33,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.MetadataValue;
@@ -52,10 +53,9 @@ import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.minigamesapi.util.Validator;
-import com.comze_instancelabs.zerog.gravitygun.CustomEntityType;
 import com.comze_instancelabs.zerog.gravitygun.GravityGun;
 import com.comze_instancelabs.zerog.gravitygun.MainListener;
-import com.comze_instancelabs.zerog.nms.register1_7_9;
+import com.comze_instancelabs.zerog.nms.register1_7_10;
 import com.shampaggon.crackshot.CSUtility;
 
 public class Main extends JavaPlugin implements Listener {
@@ -107,11 +107,11 @@ public class Main extends JavaPlugin implements Listener {
 		MinigamesAPI.getAPI().registerArenaListenerLater(this, listener);
 		pli = pinstance;
 
-		register1_7_9.registerEntities();
+		register1_7_10.registerEntities();
 
 		log = this.getLogger();
 
-		CustomEntityType.registerEntities();
+		//CustomEntityType.registerEntities();
 
 		if (con.getList("GravityGuns") == null) {
 			reg = new HashMap<>();
@@ -423,6 +423,19 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onVehicleExit(VehicleExitEvent event) {
+		if (event.getExited() instanceof Player) {
+			Player p = (Player) event.getExited();
+			if (pli.global_players.containsKey(p.getName())) {
+				if(((IArena)pli.global_players.get(p.getName())).cgravity){
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	
 	// GRAVITY GUN
 
 	@Override
