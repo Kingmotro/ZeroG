@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,12 +17,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -30,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -92,7 +95,6 @@ public class Main extends JavaPlugin implements Listener {
 	ICommandHandler cmdhandler = new ICommandHandler();
 
 	public static HashMap<String, String> pteam = new HashMap<String, String>();
-	public static HashMap<String, Chicken> pchick = new HashMap<String, Chicken>(); // sexy chick
 
 	public void onEnable() {
 		m = this;
@@ -111,7 +113,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		log = this.getLogger();
 
-		//CustomEntityType.registerEntities();
+		// CustomEntityType.registerEntities();
 
 		if (con.getList("GravityGuns") == null) {
 			reg = new HashMap<>();
@@ -221,6 +223,8 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}, 5000, 1);
+
+		new GravityTask(m).runTaskLater(m, 1L);
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -345,26 +349,19 @@ public class Main extends JavaPlugin implements Listener {
 					// p.setVelocity(p.getVelocity().multiply(0.6D));
 					// p.setVelocity(v2);
 					Location l = p.getLocation();
-					if (l.clone().add(0D, -4D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -3D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -2D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -1D, 0D).getBlock().getType() == Material.AIR) {
-						if (!pchick.containsKey(p.getName())) {
-							Chicken chick = (Chicken) l.getWorld().spawn(l, Chicken.class);
-							chick.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
-							chick.setVelocity(p.getVelocity().multiply(new Vector(3D, 0D, 3D)));
-							chick.setPassenger(p);
-							pchick.put(p.getName(), chick);
-						}
-					}
+					/*
+					 * if (l.clone().add(0D, -4D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -3D, 0D).getBlock().getType() ==
+					 * Material.AIR && l.clone().add(0D, -2D, 0D).getBlock().getType() == Material.AIR && l.clone().add(0D, -1D,
+					 * 0D).getBlock().getType() == Material.AIR) { if (!pchick.containsKey(p.getName())) { Chicken chick = (Chicken)
+					 * l.getWorld().spawn(l, Chicken.class); chick.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
+					 * chick.setVelocity(p.getVelocity().multiply(new Vector(3D, 0D, 3D))); chick.setPassenger(p); pchick.put(p.getName(), chick); } }
+					 */
 				}
 
-				if (pchick.containsKey(p.getName())) {
-					Chicken chick = pchick.get(p.getName());
-					if (chick.getLocation().clone().add(0D, -1D, 0D).getBlock().getType() != Material.AIR) {
-						chick.remove();
-						pchick.remove(p.getName());
-					}
-				}
-
-				// TODO chicken idea
+				/*
+				 * if (pchick.containsKey(p.getName())) { Chicken chick = pchick.get(p.getName()); if (chick.getLocation().clone().add(0D, -1D,
+				 * 0D).getBlock().getType() != Material.AIR) { chick.remove(); pchick.remove(p.getName()); } }
+				 */
 
 			}
 		}
@@ -428,14 +425,13 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getExited() instanceof Player) {
 			Player p = (Player) event.getExited();
 			if (pli.global_players.containsKey(p.getName())) {
-				if(((IArena)pli.global_players.get(p.getName())).cgravity){
+				if (((IArena) pli.global_players.get(p.getName())).cgravity) {
 					event.setCancelled(true);
 				}
 			}
 		}
 	}
-	
-	
+
 	// GRAVITY GUN
 
 	@Override
@@ -472,7 +468,13 @@ public class Main extends JavaPlugin implements Listener {
 			strings.set(i, strings.get(i).toUpperCase());
 		}
 		return strings;
+	}
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDamageEvent(EntityDamageEvent e) {
+		if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+			e.setCancelled(true);
+		}
 	}
 
 }

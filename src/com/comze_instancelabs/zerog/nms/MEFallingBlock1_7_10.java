@@ -32,6 +32,11 @@ public class MEFallingBlock1_7_10 extends EntityFallingBlock {
 
 	boolean coll = false;
 
+	public MEFallingBlock1_7_10(World world) {
+		super(world);
+		System.out.println("Fail");
+	}
+	
 	public MEFallingBlock1_7_10(Main m, String arena, Location loc, World world, boolean collide) {
 		super(world);
 		this.m = m;
