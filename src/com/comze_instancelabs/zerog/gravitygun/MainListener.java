@@ -37,8 +37,8 @@ import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.zerog.Main;
-import com.comze_instancelabs.zerog.nms.MEBat;
-import com.comze_instancelabs.zerog.nms.MEFallingBlock1_7_10;
+import com.comze_instancelabs.zerog.nms.ZGBat;
+import com.comze_instancelabs.zerog.nms.ZGFallingBlock1_7_10;
 import com.comze_instancelabs.zerog.nms.MEFallingBlock1_7_9;
 
 public class MainListener implements Listener {
@@ -115,7 +115,7 @@ public class MainListener implements Listener {
 							} else {
 								ent.setVelocity(v.multiply(plugin.getConfig().getDouble("Vector")));
 								Main.thrown.put(((CraftFallingSand) ent).getHandle(), p.getName());
-								((MEFallingBlock1_7_10) ((CraftFallingSand) ent).getHandle()).setF(false);
+								((ZGFallingBlock1_7_10) ((CraftFallingSand) ent).getHandle()).setF(false);
 							}
 						} else {
 							ent.setVelocity(v.multiply(0.2));
@@ -161,33 +161,36 @@ public class MainListener implements Listener {
 				if (e.getClickedBlock() == null) {
 					return;
 				}
-				if (!(g.getBlockpickupexeptions().contains(e.getClickedBlock().getType().toString())) || ((g.getBlockpickupexeptions().contains("ALL")))) {
+				if (Main.extra_exceptions.contains(e.getClickedBlock().getTypeId())){// && !(g.getBlockpickupexeptions().contains(e.getClickedBlock().getType().toString())) || ((g.getBlockpickupexeptions().contains("ALL")))) {
 					if (g.getBlockpickup().contains(e.getClickedBlock().getType().toString()) || g.getBlockpickup().contains("ALL")) {
 
 						Main.tilentities.put(p.getName(), getMeta(e.getClickedBlock()));
 						World mcWorld = ((CraftWorld) e.getPlayer().getWorld()).getHandle();
 
-						//MEBat bat = new MEBat(mcWorld, e.getClickedBlock().getLocation());
-						//Bat bukkitbat = (Bat) bat.getBukkitEntity();
-						//bat.setPosition(e.getClickedBlock().getLocation().getX(), e.getClickedBlock().getLocation().getY(), e.getClickedBlock().getLocation().getZ());
+						// MEBat bat = new MEBat(mcWorld, e.getClickedBlock().getLocation());
+						// Bat bukkitbat = (Bat) bat.getBukkitEntity();
+						// bat.setPosition(e.getClickedBlock().getLocation().getX(), e.getClickedBlock().getLocation().getY(),
+						// e.getClickedBlock().getLocation().getZ());
 
 						Block b = CraftMagicNumbers.getBlock(e.getClickedBlock().getType());
-						
+
 						String arena = "";
-						if(MinigamesAPI.getAPI().pinstances.get(plugin).global_players.containsKey(e.getPlayer().getName())){
+						if (MinigamesAPI.getAPI().pinstances.get(plugin).global_players.containsKey(e.getPlayer().getName())) {
 							arena = MinigamesAPI.getAPI().pinstances.get(plugin).global_players.get(e.getPlayer().getName()).getName();
 						}
-						//MEFallingBlock1_7_10 falling = new MEFallingBlock1_7_10(mcWorld, e.getClickedBlock().getLocation().getX(), e.getClickedBlock().getLocation().getY() + 1, e.getClickedBlock().getLocation().getZ(), b, e.getClickedBlock().getData());
-						//MEFallingBlock1_7_10 falling = new MEFallingBlock1_7_10(plugin, arena, e.getClickedBlock().getLocation(), (net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle());
-						//falling.id = Block.getById(e.getClickedBlock().getTypeId());
-						//falling.data = e.getClickedBlock().getData();
-						//FallingBlock bukkitfalling = (FallingBlock) falling.getBukkitEntity();
-						//bukkitbat.setPassenger(bukkitfalling);
-						//bukkitbat.setCustomNameVisible(false);
+						// MEFallingBlock1_7_10 falling = new MEFallingBlock1_7_10(mcWorld, e.getClickedBlock().getLocation().getX(),
+						// e.getClickedBlock().getLocation().getY() + 1, e.getClickedBlock().getLocation().getZ(), b, e.getClickedBlock().getData());
+						// MEFallingBlock1_7_10 falling = new MEFallingBlock1_7_10(plugin, arena, e.getClickedBlock().getLocation(),
+						// (net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle());
+						// falling.id = Block.getById(e.getClickedBlock().getTypeId());
+						// falling.data = e.getClickedBlock().getData();
+						// FallingBlock bukkitfalling = (FallingBlock) falling.getBukkitEntity();
+						// bukkitbat.setPassenger(bukkitfalling);
+						// bukkitbat.setCustomNameVisible(false);
 
 						final Object w = ((CraftWorld) e.getClickedBlock().getWorld()).getHandle();
-						final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle(), e.getClickedBlock().getLocation(), false);
-						final MEFallingBlock1_7_10 t_ = new MEFallingBlock1_7_10(plugin, arena, e.getClickedBlock().getLocation(), (net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle(), true);
+						final ZGBat b_ = new ZGBat((net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle(), e.getClickedBlock().getLocation(), false);
+						final ZGFallingBlock1_7_10 t_ = new ZGFallingBlock1_7_10(plugin, arena, e.getClickedBlock().getLocation(), (net.minecraft.server.v1_7_R4.World) ((CraftWorld) e.getClickedBlock().getWorld()).getHandle(), true);
 
 						t_.id = Block.getById(e.getClickedBlock().getTypeId());
 						t_.data = e.getClickedBlock().getData();
@@ -200,9 +203,9 @@ public class MainListener implements Listener {
 
 						Bat bukkitbat = bb;
 						e.getClickedBlock().setType(Material.AIR);
-						
-						//mcWorld.addEntity(bat);
-						//mcWorld.addEntity(falling);
+
+						// mcWorld.addEntity(bat);
+						// mcWorld.addEntity(falling);
 
 						PotionEffect pot = new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1);
 						bukkitbat.addPotionEffect(pot);
@@ -312,7 +315,7 @@ public class MainListener implements Listener {
 
 						for (Entity ent : p.getNearbyEntities(10, 10, 10)) {
 
-							if (ent instanceof MEBat) {
+							if (ent instanceof ZGBat) {
 								ent.remove();
 							}
 
@@ -324,7 +327,7 @@ public class MainListener implements Listener {
 
 								World mcWorld = ((CraftWorld) e.getPlayer().getWorld()).getHandle();
 
-								MEBat bat = new MEBat(mcWorld, e.getRightClicked().getLocation(), false);
+								ZGBat bat = new ZGBat(mcWorld, e.getRightClicked().getLocation(), false);
 								Bat bukkitbat = (Bat) bat.getBukkitEntity();
 								bat.setPosition(e.getRightClicked().getLocation().getX(), e.getRightClicked().getLocation().getY(), e.getRightClicked().getLocation().getZ());
 

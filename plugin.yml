@@ -2,9 +2,9 @@ name: ZeroG
 main: com.comze_instancelabs.zerog.Main
 version: 1.0.0
 author: InstanceLabs
-softdepend: [Vault, MinigamesAPI]
-depend: [MinigamesAPI]
-loadbefore: [MinigamesAPI]
+softdepend: [Vault, MinigamesLib]
+depend: [MinigamesLib]
+loadbefore: [MinigamesLib]
 commands:
    zg:
       description: Main command

@@ -3,6 +3,7 @@ package com.comze_instancelabs.zerog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -87,6 +88,8 @@ public class Main extends JavaPlugin implements Listener {
 	public static Logger log;
 
 	// /GG
+
+	public static ArrayList<Integer> extra_exceptions = new ArrayList<Integer>(Arrays.asList(159, 98, 5, 17, 121, 12, 24, 43, 1, 126, 44, 164, 4, 134, 16, 15, 170, 58, 25, 13, 61, 47, 35, 109, 67));
 
 	MinigamesAPI api = null;
 	PluginInstance pli = null;

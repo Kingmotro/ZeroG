@@ -24,27 +24,27 @@ public class register1_7_10 {
 			Field c = entityTypeClass.getDeclaredField("c");
 			c.setAccessible(true);
 			HashMap c_map = (HashMap) c.get(null);
-			c_map.put("MEBlock", MEFallingBlock1_7_10.class);
+			c_map.put("ZGBlock", ZGFallingBlock1_7_10.class);
 
 			Field d = entityTypeClass.getDeclaredField("d");
 			d.setAccessible(true);
 			HashMap d_map = (HashMap) d.get(null);
-			d_map.put(MEFallingBlock1_7_10.class, "MEBlock");
+			d_map.put(ZGFallingBlock1_7_10.class, "ZGBlock");
 
 			Field e = entityTypeClass.getDeclaredField("e");
 			e.setAccessible(true);
 			HashMap e_map = (HashMap) e.get(null);
-			e_map.put(Integer.valueOf(21), MEFallingBlock1_7_10.class);
+			e_map.put(Integer.valueOf(21), ZGFallingBlock1_7_10.class);
 
 			Field f = entityTypeClass.getDeclaredField("f");
 			f.setAccessible(true);
 			HashMap f_map = (HashMap) f.get(null);
-			f_map.put(MEFallingBlock1_7_10.class, Integer.valueOf(21));
+			f_map.put(ZGFallingBlock1_7_10.class, Integer.valueOf(21));
 
 			Field g = entityTypeClass.getDeclaredField("g");
 			g.setAccessible(true);
 			HashMap g_map = (HashMap) g.get(null);
-			g_map.put("MEBlock", Integer.valueOf(21));
+			g_map.put("ZGBlock", Integer.valueOf(21));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -57,27 +57,27 @@ public class register1_7_10 {
 			Field c = entityTypeClass.getDeclaredField("c");
 			c.setAccessible(true);
 			HashMap c_map = (HashMap) c.get(null);
-			c_map.put("MEBat", MEBat.class);
+			c_map.put("ZGBat", ZGBat.class);
 
 			Field d = entityTypeClass.getDeclaredField("d");
 			d.setAccessible(true);
 			HashMap d_map = (HashMap) d.get(null);
-			d_map.put(MEBat.class, "MEBat");
+			d_map.put(ZGBat.class, "ZGBat");
 
 			Field e = entityTypeClass.getDeclaredField("e");
 			e.setAccessible(true);
 			HashMap e_map = (HashMap) e.get(null);
-			e_map.put(Integer.valueOf(65), MEBat.class);
+			e_map.put(Integer.valueOf(65), ZGBat.class);
 
 			Field f = entityTypeClass.getDeclaredField("f");
 			f.setAccessible(true);
 			HashMap f_map = (HashMap) f.get(null);
-			f_map.put(MEBat.class, Integer.valueOf(65));
+			f_map.put(ZGBat.class, Integer.valueOf(65));
 
 			Field g = entityTypeClass.getDeclaredField("g");
 			g.setAccessible(true);
 			HashMap g_map = (HashMap) g.get(null);
-			g_map.put("MEBat", Integer.valueOf(65));
+			g_map.put("ZGBat", Integer.valueOf(65));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -86,10 +86,10 @@ public class register1_7_10 {
 		return true;
 	}
 
-	public static MEBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
+	public static ZGBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
 		final Object w = ((CraftWorld) b.getWorld()).getHandle();
-		final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R4.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation(), true);
-		final MEFallingBlock1_7_10 t_ = new MEFallingBlock1_7_10(m, arena, b.getLocation(), (net.minecraft.server.v1_7_R4.World) ((CraftWorld) b.getWorld()).getHandle(), false);
+		final ZGBat b_ = new ZGBat((net.minecraft.server.v1_7_R4.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation(), true);
+		final ZGFallingBlock1_7_10 t_ = new ZGFallingBlock1_7_10(m, arena, b.getLocation(), (net.minecraft.server.v1_7_R4.World) ((CraftWorld) b.getWorld()).getHandle(), false);
 
 		Bukkit.getScheduler().runTask(m, new Runnable() {
 			public void run() {

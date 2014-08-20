@@ -58,22 +58,22 @@ public class register1_7_9 {
 			Field c = entityTypeClass.getDeclaredField("c");
 			c.setAccessible(true);
 			HashMap c_map = (HashMap) c.get(null);
-			c_map.put("MEBat", MEBat.class);
+			c_map.put("MEBat", ZGBat.class);
 
 			Field d = entityTypeClass.getDeclaredField("d");
 			d.setAccessible(true);
 			HashMap d_map = (HashMap) d.get(null);
-			d_map.put(MEBat.class, "MEBat");
+			d_map.put(ZGBat.class, "MEBat");
 
 			Field e = entityTypeClass.getDeclaredField("e");
 			e.setAccessible(true);
 			HashMap e_map = (HashMap) e.get(null);
-			e_map.put(Integer.valueOf(65), MEBat.class);
+			e_map.put(Integer.valueOf(65), ZGBat.class);
 
 			Field f = entityTypeClass.getDeclaredField("f");
 			f.setAccessible(true);
 			HashMap f_map = (HashMap) f.get(null);
-			f_map.put(MEBat.class, Integer.valueOf(65));
+			f_map.put(ZGBat.class, Integer.valueOf(65));
 
 			Field g = entityTypeClass.getDeclaredField("g");
 			g.setAccessible(true);
@@ -87,7 +87,7 @@ public class register1_7_9 {
 		return true;
 	}
 
-	public static MEBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
+	public static ZGBat spawnBlock(Main m, String arena, final org.bukkit.block.Block b) {
 		final Object w = ((CraftWorld) b.getWorld()).getHandle();
 		//final MEBat b_ = new MEBat((net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle(), b.getLocation());
 		final MEFallingBlock1_7_9 t_ = new MEFallingBlock1_7_9(m, arena, b.getLocation(), (net.minecraft.server.v1_7_R3.World) ((CraftWorld) b.getWorld()).getHandle());

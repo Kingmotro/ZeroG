@@ -25,8 +25,8 @@ import com.comze_instancelabs.minigamesapi.ArenaType;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.util.Cuboid;
 import com.comze_instancelabs.minigamesapi.util.Util;
-import com.comze_instancelabs.zerog.nms.MEBat;
-import com.comze_instancelabs.zerog.nms.MEFallingBlock1_7_10;
+import com.comze_instancelabs.zerog.nms.ZGBat;
+import com.comze_instancelabs.zerog.nms.ZGFallingBlock1_7_10;
 import com.comze_instancelabs.zerog.nms.register1_7_10;
 
 public class IArena extends Arena {
@@ -94,6 +94,14 @@ public class IArena extends Arena {
 			m.pteam.put(playername, "blue");
 			cteam = true;
 		}
+	}
+	
+	@Override
+	public void leavePlayer(String player, boolean full){
+		super.leavePlayer(player, full);
+		Player p = Bukkit.getPlayer(player);
+		p.removePotionEffect(PotionEffectType.JUMP);
+		p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
 	}
 
 	@Override
@@ -192,7 +200,7 @@ public class IArena extends Arena {
 				timertask.cancel();
 			}
 
-			for (MEBat t_ : bats) {
+			for (ZGBat t_ : bats) {
 				// t_.setmY(-0.1D);
 				t_.motY = -0.1D;
 			}
@@ -231,15 +239,15 @@ public class IArena extends Arena {
 
 	int ccount = 0;
 	BukkitTask timertask = null;
-	ArrayList<MEFallingBlock1_7_10> fallingblocks = new ArrayList<MEFallingBlock1_7_10>();
-	ArrayList<MEBat> bats = new ArrayList<MEBat>();
+	ArrayList<ZGFallingBlock1_7_10> fallingblocks = new ArrayList<ZGFallingBlock1_7_10>();
+	ArrayList<ZGBat> bats = new ArrayList<ZGBat>();
 
 	HashMap<Location, Material> oldblocks = new HashMap<Location, Material>();
 
 	public void floatUpTimer(final ArrayList<Block> blocks) {
 		for (Block b : blocks) {
 			oldblocks.put(b.getLocation(), b.getType());
-			MEBat t = register1_7_10.spawnBlock(m, this.getName(), b);
+			ZGBat t = register1_7_10.spawnBlock(m, this.getName(), b);
 			bats.add(t);
 			Bat b_ = (Bat) t.getBukkitEntity();
 			b_.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 1));
@@ -254,7 +262,7 @@ public class IArena extends Arena {
 		}, 7L);
 		timertask = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
 			public void run() {
-				for (MEBat t : bats) {
+				for (ZGBat t : bats) {
 					// t.getBukkitEntity().setVelocity(new Vector(0D, 1.5D, 0D));
 					t.motY = 0.04D;
 					t.setmY(0.04D);
@@ -264,7 +272,7 @@ public class IArena extends Arena {
 				}
 				ccount++;
 				if (ccount > 100) {
-					for (MEBat t : bats) {
+					for (ZGBat t : bats) {
 						t.motY = 0.001D;
 						t.setmY(0.001D);
 						// t.setmY(0D);
@@ -279,7 +287,7 @@ public class IArena extends Arena {
 		for (Location l : oldblocks.keySet()) {
 			l.getWorld().getBlockAt(l).setType(oldblocks.get(l));
 		}
-		for (MEBat t : bats) {
+		for (ZGBat t : bats) {
 			Bat b = (Bat) t.getBukkitEntity();
 			if (b.getPassenger() != null) {
 				b.getPassenger().remove();

@@ -22,7 +22,7 @@ import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.zerog.Main;
 
-public class MEFallingBlock1_7_10 extends EntityFallingBlock {
+public class ZGFallingBlock1_7_10 extends EntityFallingBlock {
 
 	boolean f = true;
 	private boolean onGround = false;
@@ -32,12 +32,12 @@ public class MEFallingBlock1_7_10 extends EntityFallingBlock {
 
 	boolean coll = false;
 
-	public MEFallingBlock1_7_10(World world) {
+	public ZGFallingBlock1_7_10(World world) {
 		super(world);
 		System.out.println("Fail");
 	}
 	
-	public MEFallingBlock1_7_10(Main m, String arena, Location loc, World world, boolean collide) {
+	public ZGFallingBlock1_7_10(Main m, String arena, Location loc, World world, boolean collide) {
 		super(world);
 		this.m = m;
 		this.coll = collide;

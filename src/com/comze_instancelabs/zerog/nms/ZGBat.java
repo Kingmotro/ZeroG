@@ -10,7 +10,7 @@ import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
-public class MEBat extends EntityBat {
+public class ZGBat extends EntityBat {
 
 	private double r = (Math.random() + 0.5D);
 
@@ -18,7 +18,7 @@ public class MEBat extends EntityBat {
 
 	boolean c = true;
 
-	public MEBat(World arg0, Location t, boolean c) {
+	public ZGBat(World arg0, Location t, boolean c) {
 		super(arg0);
 
 		this.c = c;
