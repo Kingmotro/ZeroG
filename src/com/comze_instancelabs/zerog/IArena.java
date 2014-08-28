@@ -95,9 +95,9 @@ public class IArena extends Arena {
 			cteam = true;
 		}
 	}
-	
+
 	@Override
-	public void leavePlayer(String player, boolean full){
+	public void leavePlayer(String player, boolean full) {
 		super.leavePlayer(player, full);
 		Player p = Bukkit.getPlayer(player);
 		p.removePotionEffect(PotionEffectType.JUMP);
@@ -176,6 +176,7 @@ public class IArena extends Arena {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 100000, 1));
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 100000, 7));
 				// p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 1));
+				p.setFoodLevel(5);
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Zero Gravity Mode " + ChatColor.DARK_GREEN + "Activitated");
 			}
 
@@ -193,6 +194,7 @@ public class IArena extends Arena {
 				p.removePotionEffect(PotionEffectType.JUMP);
 				p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
 				// p.removePotionEffect(PotionEffectType.SLOW);
+				p.setFoodLevel(20);
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Gravity restored");
 			}
 
@@ -301,15 +303,15 @@ public class IArena extends Arena {
 	}
 
 	public void updateVelocities() {
-		if(!this.cgravity){
+		if (!this.cgravity) {
 			return;
 		}
 		// Iterator<Entity> j;
 		for (World i : m.getServer().getWorlds()) {
 			World world = i;
 			for (Entity e : world.getEntities()) {
-				if(e instanceof Player){
-					if(!this.getAllPlayers().contains(((Player)e).getName())){
+				if (e instanceof Player) {
+					if (!this.getAllPlayers().contains(((Player) e).getName())) {
 						continue;
 					}
 				}
